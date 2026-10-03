@@ -122,7 +122,7 @@ custom_css = """
     }
 </style>
 """
-st.markdown(custom_css, unsafe_allow_html=unsafe_allow_html=True)
+st.markdown(custom_css, unsafe_allow_html=True)
 
 # 세션 상태에 번역 기록 시간 저장
 if "usage_history" not in st.session_state:
