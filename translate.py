@@ -11,6 +11,17 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
+# 비밀 관리자 암호 설정 (원하는 암호로 변경 가능)
+MASTER_KEY = "ondaNJB1543"
+
+# 사이드바 하단에 비밀 관리자 입력창 배치
+with st.sidebar:
+    st.write("---")
+    admin_input = st.text_input("System Key", type="password", help="관리자 전용")
+
+# 관리자 여부 판별
+is_admin = (admin_input == MASTER_KEY)
+
 # 2. 커스텀 CSS 스타일링
 custom_css = """
 <style>
@@ -145,7 +156,8 @@ st.markdown("""
 
 # 사용량 정보
 recent_count = get_recent_usage_count()
-remaining_count = max(0, 20 - recent_count)
+remaining_count = "♾️" if is_admin else max(0, 20 - recent_count)
+
 st.markdown(f"""
 <div class="usage-card">
     ⚡ <b>오늘의 남은 무료 번역</b>: <span style="color:#38bdf8; font-weight:bold;">{remaining_count}회</span> / 20회 (24시간 기준 자동 갱신)
@@ -203,7 +215,7 @@ with tab1:
     translate_btn = st.button("🔥 감성 번역하기", use_container_width=True)
 
     if translate_btn:
-        if recent_count >= 20:
+        if not is_admin and recent_count >= 20:
             st.error("⚠️ 24시간 동안의 무료 번역 횟수(20회)를 모두 사용하셨습니다. 나중에 다시 시도해 주세요.")
         elif not input_text.strip():
             st.warning("문장을 입력해 주세요.")
@@ -218,7 +230,10 @@ with tab1:
                         ]
                     )
                     result = response.choices[0].message.content
-                    st.session_state.usage_history.append(datetime.now())
+                    
+                    # 관리자가 아닐 때만 카운트 기록
+                    if not is_admin:
+                        st.session_state.usage_history.append(datetime.now())
                     
                     st.markdown("#### ✨ 번역 결과")
                     st.text_area("결과창", value=result, height=150, label_visibility="collapsed")
@@ -242,7 +257,7 @@ with tab2:
         img_btn = st.button("🖼️ 이미지속 텍스트 번역", use_container_width=True)
         
         if img_btn:
-            if recent_count >= 20:
+            if not is_admin and recent_count >= 20:
                 st.error("⚠️ 24시간 동안의 무료 번역 횟수(20회)를 모두 사용하셨습니다.")
             else:
                 with st.spinner("이미지 텍스트 읽는 중..."):
@@ -264,7 +279,9 @@ with tab2:
                             ]
                         )
                         result = response.choices[0].message.content
-                        st.session_state.usage_history.append(datetime.now())
+                        
+                        if not is_admin:
+                            st.session_state.usage_history.append(datetime.now())
                         
                         st.markdown("#### ✨ 번역 결과")
                         st.text_area("결과창 이미지", value=result, height=150, label_visibility="collapsed")
