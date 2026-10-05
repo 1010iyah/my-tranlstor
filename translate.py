@@ -3,7 +3,7 @@ import openai
 import base64
 from datetime import datetime, timedelta
 
-# 1. 페이지 설정
+# 1. 페이지 기본 설정 (Centered 800px 모드)
 st.set_page_config(
     page_title="ONDA AI | Global Meme Subtitles",
     page_icon="✨",
@@ -22,125 +22,117 @@ with st.sidebar:
 # 관리자 여부 판별
 is_admin = (admin_input == MASTER_KEY)
 
-# 2. Modern SaaS Dark 커스텀 CSS 스타일링
+# 2. 시안 C (Minimal Dark Stack) 커스텀 CSS
 custom_css = """
 <style>
-    /* 글로벌 폰트 및 배경 설정 */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
+    /* 배경 및 기본 폰트 */
     .stApp {
-        background-color: #080c14;
+        background-color: #0b0f19;
         color: #f1f5f9;
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        font-family: 'Inter', -apple-system, sans-serif;
     }
     
-    /* 상단 히어로 헤더 커스텀 */
+    /* 헤더 카드 */
     .hero-container {
         text-align: center;
-        padding: 2.2rem 1.5rem 1.8rem 1.5rem;
-        background: rgba(15, 23, 42, 0.65);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border-radius: 20px;
+        padding: 2rem 1.2rem;
+        background: #111827;
+        border-radius: 16px;
         border: 1px solid rgba(255, 255, 255, 0.08);
-        margin-bottom: 1.5rem;
-        box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+        margin-bottom: 1.2rem;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
     }
     .brand-badge {
         display: inline-block;
-        background: linear-gradient(135deg, rgba(56, 189, 248, 0.15) 0%, rgba(99, 102, 241, 0.15) 100%);
+        background: rgba(56, 189, 248, 0.1);
         color: #38bdf8;
-        border: 1px solid rgba(56, 189, 248, 0.3);
-        padding: 0.3rem 0.85rem;
+        border: 1px solid rgba(56, 189, 248, 0.25);
+        padding: 0.25rem 0.75rem;
         border-radius: 9999px;
         font-size: 0.75rem;
         font-weight: 700;
-        letter-spacing: 0.08em;
-        margin-bottom: 0.8rem;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.6rem;
     }
     .hero-title {
-        font-size: 2.4rem;
+        font-size: 2.2rem;
         font-weight: 800;
-        background: linear-gradient(90deg, #38bdf8 0%, #818cf8 40%, #c084fc 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 0.5rem;
-        letter-spacing: -0.03em;
+        color: #ffffff;
+        margin-bottom: 0.4rem;
+        letter-spacing: -0.02em;
     }
     .hero-subtitle {
         color: #94a3b8;
-        font-size: 0.92rem;
+        font-size: 0.9rem;
         font-weight: 400;
-        margin-bottom: 0;
     }
 
-    /* 24시간 잔여 횟수 카드 */
+    /* 사용량 카드 */
     .usage-card {
-        background: rgba(15, 23, 42, 0.4);
+        background: #111827;
         border: 1px solid rgba(255, 255, 255, 0.06);
         border-radius: 12px;
-        padding: 0.65rem 1rem;
-        color: #cbd5e1;
+        padding: 0.6rem 1rem;
+        color: #94a3b8;
         font-size: 0.85rem;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1.2rem;
         text-align: center;
     }
 
-    /* 탭 디자인 커스텀 */
+    /* 탭 디자인 */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 8px;
-        background-color: rgba(15, 23, 42, 0.7);
-        padding: 6px;
-        border-radius: 14px;
-        border: 1px solid rgba(255, 255, 255, 0.06);
+        gap: 6px;
+        background-color: #111827;
+        padding: 5px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
     }
     .stTabs [data-baseweb="tab"] {
-        border-radius: 10px;
+        border-radius: 8px;
         color: #94a3b8;
         font-weight: 600;
-        padding: 8px 20px;
+        padding: 8px 18px;
         border: none !important;
-        transition: all 0.2s ease;
     }
     .stTabs [aria-selected="true"] {
-        background-color: #3b82f6 !important;
+        background-color: #2563eb !important;
         color: #ffffff !important;
-        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
     }
 
-    /* 번역 버튼 글래스모피즘 그라데이션 */
+    /* 버튼 스타일 */
     .stButton > button {
-        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%) !important;
+        background: #2563eb !important;
         color: #ffffff !important;
         font-weight: 700 !important;
-        font-size: 1rem !important;
-        border-radius: 14px !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        padding: 0.8rem 1.5rem !important;
-        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
-        box-shadow: 0 8px 20px -4px rgba(79, 70, 229, 0.4) !important;
+        font-size: 0.98rem !important;
+        border-radius: 12px !important;
+        border: none !important;
+        padding: 0.75rem 1.5rem !important;
+        transition: all 0.2s ease !important;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3) !important;
     }
     .stButton > button:hover {
-        transform: translateY(-2px) !important;
-        box-shadow: 0 12px 25px -4px rgba(79, 70, 229, 0.6) !important;
+        background: #1d4ed8 !important;
+        transform: translateY(-1px) !important;
     }
 
-    /* 텍스트 입력창 & 결과창 스타일 */
+    /* 텍스트 상자 스타일 */
     .stTextArea textarea {
-        background-color: rgba(15, 23, 42, 0.8) !important;
+        background-color: #111827 !important;
         color: #f8fafc !important;
-        border-radius: 14px !important;
+        border-radius: 12px !important;
         border: 1px solid rgba(255, 255, 255, 0.08) !important;
         font-size: 0.95rem !important;
-        padding: 1rem !important;
-        line-height: 1.5 !important;
+        padding: 0.9rem !important;
     }
     .stTextArea textarea:focus {
-        border-color: #6366f1 !important;
-        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25) !important;
+        border-color: #2563eb !important;
+        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2) !important;
     }
 
-    /* 라디오 버튼 텍스트 색상 커스텀 */
+    /* 라디오 버튼 텍스트 */
     .stRadio label {
         color: #cbd5e1 !important;
         font-weight: 500;
@@ -149,7 +141,7 @@ custom_css = """
 """
 st.markdown(custom_css, unsafe_allow_html=True)
 
-# 세션 상태에 번역 기록 시간 저장
+# 세션 상태 초기화
 if "usage_history" not in st.session_state:
     st.session_state.usage_history = []
 
@@ -159,22 +151,22 @@ def get_recent_usage_count():
     st.session_state.usage_history = [t for t in st.session_state.usage_history if t > cutoff]
     return len(st.session_state.usage_history)
 
-# 3. 히어로 헤더 영역
+# 3. 헤더
 st.markdown("""
 <div class="hero-container">
     <div class="brand-badge">ONDA AI</div>
     <div class="hero-title">Open NJB Discover Across</div>
-    <div class="hero-subtitle">한국어 밈과 미국 현지 Gen-Z 감성을 자유롭게 넘나드는 AI 자막 번역기</div>
+    <div class="hero-subtitle">한국어 밈과 미국 현지 Gen-Z 감성을 넘나드는 AI 자막 번역기</div>
 </div>
 """, unsafe_allow_html=True)
 
-# 사용량 정보 카드
+# 잔여 횟수 카드
 recent_count = get_recent_usage_count()
 remaining_count = "♾️" if is_admin else max(0, 20 - recent_count)
 
 st.markdown(f"""
 <div class="usage-card">
-    ⚡ <b>오늘의 남은 무료 번역</b>: <span style="color:#38bdf8; font-weight:bold;">{remaining_count}회</span> / 20회 (24시간 기준 자동 갱신)
+    ⚡ <b>오늘의 남은 무료 번역</b>: <span style="color:#38bdf8; font-weight:bold;">{remaining_count}회</span> / 20회 (24시간 기준)
 </div>
 """, unsafe_allow_html=True)
 
@@ -226,15 +218,15 @@ with tab1:
         label_visibility="collapsed"
     )
     
-    translate_btn = st.button("🔥 감성 번역하기", use_container_width=True)
+    translate_btn = st.button("🔥 번역하기", use_container_width=True)
 
     if translate_btn:
         if not is_admin and recent_count >= 20:
-            st.error("⚠️ 24시간 동안의 무료 번역 횟수(20회)를 모두 사용하셨습니다. 나중에 다시 시도해 주세요.")
+            st.error("⚠️ 24시간 동안의 무료 번역 횟수(20회)를 모두 사용하셨습니다.")
         elif not input_text.strip():
             st.warning("문장을 입력해 주세요.")
         else:
-            with st.spinner("ONDA AI가 트렌디한 감성으로 다듬는 중..."):
+            with st.spinner("ONDA AI가 번역 중..."):
                 try:
                     response = client.chat.completions.create(
                         model="gpt-4o",
