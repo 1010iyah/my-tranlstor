@@ -11,7 +11,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 비밀 관리자 암호 설정 (원하는 암호로 변경 가능)
+# 관리자 비밀번호 설정
 MASTER_KEY = "ondaNJB1543"
 
 # 사이드바 하단에 비밀 관리자 입력창 배치
@@ -22,114 +22,128 @@ with st.sidebar:
 # 관리자 여부 판별
 is_admin = (admin_input == MASTER_KEY)
 
-# 2. 커스텀 CSS 스타일링
+# 2. Modern SaaS Dark 커스텀 CSS 스타일링
 custom_css = """
 <style>
-    /* 메인 배경 및 기본 폰트 설정 */
+    /* 글로벌 폰트 및 배경 설정 */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
     .stApp {
-        background-color: #0f172a;
-        color: #f8fafc;
+        background-color: #080c14;
+        color: #f1f5f9;
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
     
-    /* 상단 헤더 커스텀 */
+    /* 상단 히어로 헤더 커스텀 */
     .hero-container {
         text-align: center;
-        padding: 2.5rem 1rem 1.5rem 1rem;
-        background: linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.8) 100%);
+        padding: 2.2rem 1.5rem 1.8rem 1.5rem;
+        background: rgba(15, 23, 42, 0.65);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
         border-radius: 20px;
         border: 1px solid rgba(255, 255, 255, 0.08);
-        margin-bottom: 2rem;
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-    }
-    .hero-title {
-        font-size: 2.5rem;
-        font-weight: 800;
-        background: linear-gradient(90deg, #38bdf8 0%, #818cf8 50%, #c084fc 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 0.5rem;
-        letter-spacing: -0.02em;
-    }
-    .hero-subtitle {
-        color: #94a3b8;
-        font-size: 0.95rem;
-        font-weight: 400;
-        margin-bottom: 0.8rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
     }
     .brand-badge {
         display: inline-block;
-        background: rgba(56, 189, 248, 0.1);
+        background: linear-gradient(135deg, rgba(56, 189, 248, 0.15) 0%, rgba(99, 102, 241, 0.15) 100%);
         color: #38bdf8;
-        border: 1px solid rgba(56, 189, 248, 0.2);
-        padding: 0.25rem 0.75rem;
+        border: 1px solid rgba(56, 189, 248, 0.3);
+        padding: 0.3rem 0.85rem;
         border-radius: 9999px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        letter-spacing: 0.05em;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        margin-bottom: 0.8rem;
     }
-
-    /* 탭 스타일 개편 */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 8px;
-        background-color: rgba(30, 41, 59, 0.5);
-        padding: 6px;
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.05);
+    .hero-title {
+        font-size: 2.4rem;
+        font-weight: 800;
+        background: linear-gradient(90deg, #38bdf8 0%, #818cf8 40%, #c084fc 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.5rem;
+        letter-spacing: -0.03em;
     }
-    .stTabs [data-baseweb="tab"] {
-        border-radius: 8px;
+    .hero-subtitle {
         color: #94a3b8;
-        font-weight: 600;
-        padding: 8px 16px;
-        border: none !important;
-    }
-    .stTabs [aria-selected="true"] {
-        background-color: #3b82f6 !important;
-        color: #ffffff !important;
+        font-size: 0.92rem;
+        font-weight: 400;
+        margin-bottom: 0;
     }
 
-    /* 버튼 모던 스타일링 */
-    .stButton > button {
-        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%) !important;
-        color: white !important;
-        font-weight: 700 !important;
-        font-size: 1rem !important;
-        border-radius: 12px !important;
-        border: none !important;
-        padding: 0.75rem 1.5rem !important;
-        transition: all 0.2s ease-in-out !important;
-        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3) !important;
-    }
-    .stButton > button:hover {
-        transform: translateY(-2px) !important;
-        box-shadow: 0 6px 20px rgba(79, 70, 229, 0.5) !important;
-    }
-
-    /* 텍스트 영역 스타일링 */
-    .stTextArea textarea {
-        background-color: #1e293b !important;
-        color: #f1f5f9 !important;
-        border-radius: 12px !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        font-size: 0.95rem !important;
-        padding: 1rem !important;
-    }
-    .stTextArea textarea:focus {
-        border-color: #6366f1 !important;
-        box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2) !important;
-    }
-
-    /* 안내 메시지 카드 */
+    /* 24시간 잔여 횟수 카드 */
     .usage-card {
-        background-color: rgba(30, 41, 59, 0.4);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        border-radius: 10px;
-        padding: 0.6rem 1rem;
+        background: rgba(15, 23, 42, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 12px;
+        padding: 0.65rem 1rem;
         color: #cbd5e1;
         font-size: 0.85rem;
         margin-bottom: 1.5rem;
         text-align: center;
+    }
+
+    /* 탭 디자인 커스텀 */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 8px;
+        background-color: rgba(15, 23, 42, 0.7);
+        padding: 6px;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .stTabs [data-baseweb="tab"] {
+        border-radius: 10px;
+        color: #94a3b8;
+        font-weight: 600;
+        padding: 8px 20px;
+        border: none !important;
+        transition: all 0.2s ease;
+    }
+    .stTabs [aria-selected="true"] {
+        background-color: #3b82f6 !important;
+        color: #ffffff !important;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    /* 번역 버튼 글래스모피즘 그라데이션 */
+    .stButton > button {
+        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%) !important;
+        color: #ffffff !important;
+        font-weight: 700 !important;
+        font-size: 1rem !important;
+        border-radius: 14px !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        padding: 0.8rem 1.5rem !important;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        box-shadow: 0 8px 20px -4px rgba(79, 70, 229, 0.4) !important;
+    }
+    .stButton > button:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 12px 25px -4px rgba(79, 70, 229, 0.6) !important;
+    }
+
+    /* 텍스트 입력창 & 결과창 스타일 */
+    .stTextArea textarea {
+        background-color: rgba(15, 23, 42, 0.8) !important;
+        color: #f8fafc !important;
+        border-radius: 14px !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        font-size: 0.95rem !important;
+        padding: 1rem !important;
+        line-height: 1.5 !important;
+    }
+    .stTextArea textarea:focus {
+        border-color: #6366f1 !important;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25) !important;
+    }
+
+    /* 라디오 버튼 텍스트 색상 커스텀 */
+    .stRadio label {
+        color: #cbd5e1 !important;
+        font-weight: 500;
     }
 </style>
 """
@@ -154,7 +168,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# 사용량 정보
+# 사용량 정보 카드
 recent_count = get_recent_usage_count()
 remaining_count = "♾️" if is_admin else max(0, 20 - recent_count)
 
@@ -208,7 +222,7 @@ with tab1:
     input_text = st.text_area(
         "텍스트 입력",
         placeholder="번역하고 싶은 자막이나 밈 문장을 입력하세요...",
-        height=120,
+        height=130,
         label_visibility="collapsed"
     )
     
@@ -231,7 +245,6 @@ with tab1:
                     )
                     result = response.choices[0].message.content
                     
-                    # 관리자가 아닐 때만 카운트 기록
                     if not is_admin:
                         st.session_state.usage_history.append(datetime.now())
                     
